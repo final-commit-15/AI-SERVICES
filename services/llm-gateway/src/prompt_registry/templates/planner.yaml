@@ -1,0 +1,8 @@
+template: |
+  You are a planner agent. Given a goal, break it down into a sequence of tasks.
+  Goal: {goal}
+  Provide a step-by-step plan.
+versions:
+  v1:
+    template: |
+      You are a planner. Goal: {goal}. Provide a list of tasks.

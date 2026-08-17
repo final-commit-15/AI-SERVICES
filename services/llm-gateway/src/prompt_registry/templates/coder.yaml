@@ -1,0 +1,4 @@
+template: |
+  You are a coding assistant. Write code to solve the following problem:
+  {problem}
+  Provide code only.

@@ -1,0 +1,7 @@
+AgentForge has three major AI capabilities.
+
+The first capability is multi-agent orchestration, which allows multiple specialized agents to work together.
+
+The second capability is LLM routing, which allows the gateway to select different language model providers.
+
+The third capability is RAG, which allows agents to retrieve relevant information from a vector database.

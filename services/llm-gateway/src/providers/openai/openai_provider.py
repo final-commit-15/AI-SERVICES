@@ -1,16 +1,13 @@
 from typing import Any, Dict, Optional
-from ollama import AsyncClient
+from openai import AsyncOpenAI
 from ..base import LLMProvider
 from ...config.settings import settings
 
 
-class OllamaProvider(LLMProvider):
+class OpenAIProvider(LLMProvider):
     def __init__(self):
-        self.client = AsyncClient(
-            host=settings.ollama_host,
-            timeout=settings.ollama_timeout,
-        )
-        self.model = settings.ollama_model
+        self.client = AsyncOpenAI(api_key=settings.openai_api_key)
+        self.model = settings.openai_model
 
     @property
     def model_name(self) -> str:
@@ -23,19 +20,21 @@ class OllamaProvider(LLMProvider):
                    temperature: float = 0.0,
                    response_format: Optional[Dict[str, Any]] = None,
                    **kwargs) -> Dict[str, Any]:
-        response = await self.client.chat(
+        # If thinking is enabled, use reasoning model? For now ignore.
+        resp = await self.client.chat.completions.create(
             model=self.model,
             messages=messages,
-            think=thinking,
-            stream=False,
-            format=response_format,
-            options={
-                "temperature": temperature,
-                **kwargs.get("options", {})
-            },
-            keep_alive=settings.ollama_keep_alive,
+            temperature=temperature,
+            response_format=response_format,  # may need to map
+            **kwargs
         )
-        return response
+        return {
+            "message": {
+                "role": "assistant",
+                "content": resp.choices[0].message.content
+            },
+            "usage": resp.usage.model_dump() if resp.usage else {}
+        }
 
     async def generate(self,
                        prompt: str,
@@ -44,8 +43,5 @@ class OllamaProvider(LLMProvider):
                        max_tokens: Optional[int] = None,
                        **kwargs) -> str:
         messages = [{"role": "user", "content": prompt}]
-        resp = await self.chat(messages, temperature=temperature, **kwargs)
+        resp = await self.chat(messages, temperature=temperature, max_tokens=max_tokens, **kwargs)
         return resp["message"]["content"]
-
-    async def list_models(self):
-        return await self.client.list()

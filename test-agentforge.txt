@@ -1,0 +1,5 @@
+AgentForge is an AI agent platform that allows users to build, manage, and execute autonomous AI agents.
+
+AgentForge uses an LLM gateway to route requests to different language models. It also supports Retrieval-Augmented Generation (RAG) for retrieving information from a knowledge base.
+
+The AgentForge AI services layer provides LLM routing, embeddings, vector search, caching, guardrails, and prompt management.
