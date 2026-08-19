@@ -3,7 +3,7 @@ services:
   llm-gateway:
     build: .
     ports:
-      - "8000:8000"
+      - "8002:8000"
     environment:
       - OLLAMA_HOST=http://host.docker.internal:11434
       - OLLAMA_MODEL=qwen3:4b
